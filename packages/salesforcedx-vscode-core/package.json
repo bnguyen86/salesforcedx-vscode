@@ -15,7 +15,7 @@
     "theme": "light"
   },
   "aiKey": "ec3632a4-df47-47a4-98dc-8134cacbaf7e",
-  "version": "43.10.0",
+  "version": "43.12.0",
   "publisher": "salesforce",
   "license": "BSD-3-Clause",
   "engines": {
@@ -23,21 +23,22 @@
   },
   "categories": ["Other"],
   "dependencies": {
-    "@salesforce/salesforcedx-sobjects-faux-generator": "43.10.0",
-    "@salesforce/salesforcedx-utils-vscode": "43.10.0",
+    "@salesforce/salesforcedx-sobjects-faux-generator": "43.12.0",
+    "@salesforce/salesforcedx-utils-vscode": "43.12.0",
     "adm-zip": "0.4.7",
     "glob": "^7.1.2",
     "moment": "2.20.1",
     "rxjs": "^5.4.1",
     "sanitize-filename": "^1.6.1",
-    "shelljs": "^0.8.1"
+    "shelljs": "^0.8.1",
+    "vscode-extension-telemetry": "0.0.17"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.4.31",
     "@types/chai": "^4.0.0",
     "@types/glob": "^5.0.30",
     "@types/mocha": "2.2.38",
-    "@types/node": "^7.0.0",
+    "@types/node": "8.9.3",
     "@types/path-exists": "^1.0.29",
     "@types/sanitize-filename": "^1.1.28",
     "@types/shelljs": "^0.7.8",
@@ -49,8 +50,7 @@
     "nyc": "^11.0.2",
     "sinon": "^2.3.6",
     "typescript": "2.6.2",
-    "vscode": "1.1.17",
-    "vscode-extension-telemetry": "0.0.17"
+    "vscode": "1.1.17"
   },
   "scripts": {
     "vscode:prepublish": "npm prune --production",
@@ -71,6 +71,7 @@
   "activationEvents": [
     "workspaceContains:sfdx-project.json",
     "onCommand:sfdx.force.project.create",
+    "onCommand:sfdx.force.project.with.manifest.create",
     "onCommand:sfdx.debug.isv.bootstrap"
   ],
   "main": "./out/src",
@@ -284,7 +285,7 @@
           "command": "sfdx.force.project.create"
         },
         {
-          "command": "sfdx.force.create.change.set.based",
+          "command": "sfdx.force.project.with.manifest.create",
           "when":
             "config.salesforcedx-vscode-core.change_set_based_tools.enabled"
         },
@@ -487,8 +488,8 @@
         "title": "%force_project_create_text%"
       },
       {
-        "command": "sfdx.force.create.change.set.based",
-        "title": "%force_project_create_change_set_based_text%"
+        "command": "sfdx.force.project.with.manifest.create",
+        "title": "%force_project_with_manifest_create_text%"
       },
       {
         "command": "sfdx.force.apex.trigger.create",

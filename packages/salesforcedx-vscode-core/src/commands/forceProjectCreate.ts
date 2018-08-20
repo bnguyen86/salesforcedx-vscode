@@ -32,7 +32,7 @@ import {
 } from './commands';
 
 type forceProjectCreateOptions = {
-  isChangeSetBasedProject: boolean;
+  isProjectWithManifest: boolean;
 };
 
 export class ForceProjectCreateExecutor extends SfdxCommandletExecutor<
@@ -40,7 +40,7 @@ export class ForceProjectCreateExecutor extends SfdxCommandletExecutor<
 > {
   private readonly options: forceProjectCreateOptions;
 
-  public constructor(options = { isChangeSetBasedProject: false }) {
+  public constructor(options = { isProjectWithManifest: false }) {
     super();
     this.options = options;
   }
@@ -50,9 +50,10 @@ export class ForceProjectCreateExecutor extends SfdxCommandletExecutor<
       .withDescription(nls.localize('force_project_create_text'))
       .withArg('force:project:create')
       .withFlag('--projectname', data.projectName)
-      .withFlag('--outputdir', data.projectUri);
+      .withFlag('--outputdir', data.projectUri)
+      .withLogName('force_project_create');
 
-    if (this.options.isChangeSetBasedProject) {
+    if (this.options.isProjectWithManifest) {
       builder.withArg('--manifest');
     }
 
@@ -71,7 +72,7 @@ export class ForceProjectCreateExecutor extends SfdxCommandletExecutor<
       if (data !== undefined && data.toString() === '0') {
         await vscode.commands.executeCommand(
           'vscode.openFolder',
-          vscode.Uri.parse(
+          vscode.Uri.file(
             path.join(response.data.projectUri, response.data.projectName)
           )
         );
@@ -82,6 +83,7 @@ export class ForceProjectCreateExecutor extends SfdxCommandletExecutor<
       execution.command.toString(),
       (execution.stderrSubject as any) as Observable<Error | undefined>
     );
+    this.logMetric(execution.command.logName);
     channelService.streamCommandOutput(execution);
     ProgressNotification.show(execution, cancellationTokenSource);
     taskViewService.addCommandExecution(execution, cancellationTokenSource);
@@ -182,12 +184,12 @@ export async function forceSfdxProjectCreate() {
   await sfdxProjectCreateCommandlet.run();
 }
 
-const changeSetProjectCreateCommandlet = new SfdxCommandlet(
+const projectWithManifestCreateCommandlet = new SfdxCommandlet(
   workspaceChecker,
   parameterGatherer,
-  new ForceProjectCreateExecutor({ isChangeSetBasedProject: true }),
+  new ForceProjectCreateExecutor({ isProjectWithManifest: true }),
   pathExistsChecker
 );
-export async function forceChangeSetProjectCreate() {
-  await changeSetProjectCreateCommandlet.run();
+export async function forceProjectWithManifestCreate() {
+  await projectWithManifestCreateCommandlet.run();
 }

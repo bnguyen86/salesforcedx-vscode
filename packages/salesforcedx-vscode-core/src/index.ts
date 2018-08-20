@@ -10,6 +10,7 @@ import { ConfigurationTarget } from 'vscode';
 import { channelService } from './channels';
 import {
   CompositeParametersGatherer,
+  EmptyParametersGatherer,
   forceAliasList,
   forceApexClassCreate,
   forceApexExecute,
@@ -19,11 +20,11 @@ import {
   forceApexTestMethodRunCodeAction,
   forceApexTestMethodRunCodeActionDelegate,
   forceApexTestRun,
+  ForceApexTestRunCodeActionExecutor,
   forceApexTriggerCreate,
   forceAuthDevHub,
   forceAuthLogoutAll,
   forceAuthWebLogin,
-  forceChangeSetProjectCreate,
   forceConfigList,
   forceDataSoqlQuery,
   forceDebuggerStop,
@@ -35,6 +36,7 @@ import {
   forceOrgCreate,
   forceOrgDisplay,
   forceOrgOpen,
+  forceProjectWithManifestCreate,
   forceSfdxProjectCreate,
   forceSourceDeploy,
   forceSourcePull,
@@ -254,9 +256,9 @@ function registerCommands(
     forceSfdxProjectCreate
   );
 
-  const forceChangeSetBasedProjectCreateCmd = vscode.commands.registerCommand(
-    'sfdx.force.create.change.set.based',
-    forceChangeSetProjectCreate
+  const forceProjectWithManifestCreateCmd = vscode.commands.registerCommand(
+    'sfdx.force.project.with.manifest.create',
+    forceProjectWithManifestCreate
   );
 
   const forceApexTriggerCreateCmd = vscode.commands.registerCommand(
@@ -327,7 +329,7 @@ function registerCommands(
     forceOrgDisplayUsernameCmd,
     forceGenerateFauxClassesCmd,
     forceProjectCreateCmd,
-    forceChangeSetBasedProjectCreateCmd,
+    forceProjectWithManifestCreateCmd,
     forceApexTriggerCreateCmd,
     forceStartApexDebugLoggingCmd,
     forceStopApexDebugLoggingCmd,
@@ -350,7 +352,9 @@ export async function activate(context: vscode.ExtensionContext) {
   console.log('SFDX CLI Extension Activated');
 
   // Telemetry
-  telemetryService.initializeService(context);
+  const machineId =
+    vscode && vscode.env ? vscode.env.machineId : 'someValue.machineId';
+  telemetryService.initializeService(context, machineId);
   telemetryService.showTelemetryMessage();
   telemetryService.sendExtensionActivationEvent();
 
@@ -445,6 +449,8 @@ export async function activate(context: vscode.ExtensionContext) {
   const api: any = {
     ProgressNotification,
     CompositeParametersGatherer,
+    EmptyParametersGatherer,
+    ForceApexTestRunCodeActionExecutor,
     SelectFileName,
     SelectStrictDirPath,
     SfdxCommandlet,

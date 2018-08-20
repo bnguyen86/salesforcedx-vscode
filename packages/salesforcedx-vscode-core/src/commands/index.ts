@@ -7,6 +7,7 @@
 
 export {
   CompositeParametersGatherer,
+  EmptyParametersGatherer,
   SelectFileName,
   SelectStrictDirPath,
   SfdxCommandlet,
@@ -21,7 +22,8 @@ export {
   forceApexTestClassRunCodeAction,
   forceApexTestClassRunCodeActionDelegate,
   forceApexTestMethodRunCodeAction,
-  forceApexTestMethodRunCodeActionDelegate
+  forceApexTestMethodRunCodeActionDelegate,
+  ForceApexTestRunCodeActionExecutor
 } from './forceApexTestRunCodeAction';
 export { forceDataSoqlQuery } from './forceDataSoqlQuery';
 export { forceOrgCreate } from './forceOrgCreate';
@@ -48,7 +50,7 @@ export { forceAliasList } from './forceAliasList';
 export { forceOrgDisplay } from './forceOrgDisplay';
 export {
   forceSfdxProjectCreate,
-  forceChangeSetProjectCreate
+  forceProjectWithManifestCreate
 } from './forceProjectCreate';
 export { forceApexTriggerCreate } from './forceApexTriggerCreate';
 export { forceStartApexDebugLogging } from './forceStartApexDebugLogging';
